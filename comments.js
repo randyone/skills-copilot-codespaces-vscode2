@@ -1,12 +1,12 @@
 // create web server
-const express = require("express");
+import express from "express";
 const app = express();
 const port = 3000;
-const bodyParser = require("body-parser");
-const { spawn } = require("child_process");
+import { json, urlencoded } from "body-parser";
+import { spawn } from "child_process";
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 // start server
 app.listen(port, () => {

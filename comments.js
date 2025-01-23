@@ -1,30 +1,24 @@
 // create web server
-import express from "express";
-const app = express();
-const port = 3000;
-import { json, urlencoded } from "body-parser";
-import { spawn } from "child_process";
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const url = require('url');
+const { parse } = require('node-html-parser');
 
-app.use(json());
-app.use(urlencoded({ extended: true }));
+const PORT = 3000;
+const HOSTNAME = 'localhost';
+const commentsFilePath = path.join(__dirname, 'comments.json');
 
-// start server
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
-
-// create comments array
+// Read comments from comments.json
 let comments = [];
-
-// add comment to array
-app.post("/comments", (req, res) => {
-  const comment = req.body;
-  console.log(comment);
-  comments.push(comment);
-  res.send("Comment added");
+fs.readFile(commentsFilePath, (err, data) => {
+  if (err) throw err;
+  comments = JSON.parse(data);
 });
 
-// get comments from array
-app.get("/comments", (req, res) => {
-  res.json(comments);
-});
+// Function to write comments to comments.json
+function writeComments() {
+  fs.writeFile(commentsFilePath, JSON.stringify(comments), (err) => {
+    if (err) throw err;
+  });
+}
